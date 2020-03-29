@@ -3,6 +3,17 @@ const DEFAULT_FILTERS = {
   stayHome: false
 }
 
+export const DEFAULT_INTERVENTION_PARAMETERS = {
+  baselineR0: 3.5,
+  handwashPct: 0,
+  glovesPct: 0,
+  maskPct: 0,
+  n95Pct: 0,
+  gownPct: 0,
+  testFrequency: 30,
+  testPct: 0
+}
+
 export const CANVAS_SIZE = {
   height: 880,
   width: 360
@@ -18,19 +29,22 @@ export const COLORS = {
   death: '#c50000',
   recovered: '#D88DBC',
   infected: '#5ABA4A',
-  well: '#63C8F2'
+  well: '#63C8F2',
+  quarantined: '#FCBA03'
 }
 
 export const STATES = {
   infected: 'infected',
   well: 'well',
   recovered: 'recovered',
-  death: 'death'
+  quarantined: 'quarantined'
 }
 
 export const COUNTERS = {
   ...STATES,
-  'max-concurrent-infected': 'max-concurrent-infected'
+  'max-concurrent-infected': 'max-concurrent-infected',
+  'work-days-lost': 'work-days-lost',
+  'work-days-performed': 'work-days-performed'
 }
 
 export const STARTING_BALLS = {
@@ -38,22 +52,90 @@ export const STARTING_BALLS = {
   [STATES.well]: 199,
   [STATES.recovered]: 0,
   [STATES.death]: 0,
+  [STATES.quarantined]: 0,
   'max-concurrent-infected': 0
 }
 
 export const RUN = {
   filters: { ...DEFAULT_FILTERS },
   results: { ...STARTING_BALLS },
+  interventionParameters: { ...DEFAULT_INTERVENTION_PARAMETERS },
   tick: 0
 }
 
 export const MORTALITY_PERCENTATGE = 5
-export const SPEED = 1
-export const TOTAL_TICKS = 1600
+export const SPEED = 2
+export const TOTAL_TICKS = 10000
 export const TICKS_TO_RECOVER = 500
+export const TICKS_PER_DAY = 25 // Gives 20 days to recover
 export const STATIC_PEOPLE_PERCENTATGE = 25
+
+export const HANDWASHING_EFFECTIVENESS = 0.55
+export const MASK_EFFECTIVENESS = 0.68
+export const N95_MASK_EFFECTIVENESS = 0.95
+export const GLOVE_EFFECTIVENESS = 0.57
+export const GOWN_EFFECTIVENESS = 0.77
+export const HAND_MASK_GOWN_EFFECTIVENESS = 0.91
+
+function getBaselineTransmissionProbability () {
+  // In the original WaPo graphic, every collision resulted in a transmission.
+  // As a result, R0 is really enormous and interventions need to be extremely
+  // effective in order to reduce transmission.
+  //
+  // We want to calibrate the probability that a collision leads to transmission
+  // so that the expected number of infections due to the first ball is equal to
+  // the R0 for covid-19, which is usually estimated as around 2.5.
+  //
+  // Units of distance are px, velocity is px/s
+
+  // units: px
+  const diameter = 2 * BALL_RADIUS
+
+  // units: balls
+  const nBalls = STARTING_BALLS.infected + STARTING_BALLS.well
+
+  // units: px^2
+  const volume = (DESKTOP_CANVAS_SIZE.width * DESKTOP_CANVAS_SIZE.height)
+
+  // units: balls / px ^ 2
+  const ballDensity = nBalls / volume
+
+  // units: px / tick
+  const meanRelVelocity = Math.SQRT2 * SPEED
+
+  // How frequently will balls collide?
+  // Note, this collision frequency estimate is different from the one in 3d
+  // because the ball sweeps out a volume of dvt, not pi d^2 vt.
+  //
+  // units : balls / tick
+  const collisionFrequency = diameter * meanRelVelocity * ballDensity
+
+  // What is the total number of collisions that will occur during
+  // an infection?
+  //
+  // units: balls
+  const nCollisionsWhileInfected = TICKS_TO_RECOVER * collisionFrequency
+
+  // Which probability of transmission would cause the expected number
+  // of secondary infections to equal the desired R0?
+  //
+  // unitless
+  const baselineTransmissionProbability =
+    DEFAULT_INTERVENTION_PARAMETERS.baselineR0 /
+    nCollisionsWhileInfected
+  if (baselineTransmissionProbability > 1) {
+    throw Error('Need more balls to simulate such a high R0. Max R0 is ' + nCollisionsWhileInfected)
+  }
+  return baselineTransmissionProbability
+}
+
+DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability =
+  getBaselineTransmissionProbability()
 
 export const resetRun = () => {
   RUN.results = { ...STARTING_BALLS }
   RUN.tick = 0
+
+  DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability =
+    getBaselineTransmissionProbability()
 }

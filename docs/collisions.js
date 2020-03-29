@@ -1,0 +1,1 @@
+const{atan2:atan2,cos:cos,sin:sin,sqrt:sqrt}=Math;export const calculateChangeDirection=({dx:t,dy:n})=>{const s=atan2(n,t);return{ax:cos(s),ay:sin(s)}};export const checkCollision=({dx:t,dy:n,diameter:s})=>sqrt(t*t+n*n)<s;

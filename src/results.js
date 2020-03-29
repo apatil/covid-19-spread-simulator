@@ -67,9 +67,9 @@ export const updateCount = () => {
     })
 
     if (isDesktop) {
-      RUN.tick % 2 === 0 && updateGraph()
+      RUN.tick % 10 === 0 && updateGraph()
     } else {
-      RUN.tick % 4 === 0 && updateGraph()
+      RUN.tick % 20 === 0 && updateGraph()
     }
   }
 

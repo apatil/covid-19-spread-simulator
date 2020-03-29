@@ -1,7 +1,16 @@
 const $ = id => document.getElementById(id)
 
 export const replayButton = $('replay')
-export const deathFilter = $('deaths')
-export const stayHomeFilter = $('stay-home')
+export const runNowButton = $('runnow')
 export const graphElement = $('graph')
 export const replayElement = $('replay')
+
+export const glovesPct = $('gloves-pct')
+export const maskPct = $('mask-pct')
+export const gownPct = $('gown-pct')
+export const handwashPct = $('handwash-pct')
+export const n95Pct = $('n95-pct')
+export const baselineR0 = $('baseline-r0')
+
+export const testFrequency = $('test-frequency')
+export const testPct = $('test-pct')

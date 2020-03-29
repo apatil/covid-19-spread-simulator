@@ -5,13 +5,21 @@ import {
   STARTING_BALLS,
   RUN,
   STATIC_PEOPLE_PERCENTATGE,
-  STATES
+  STATES,
+  DEFAULT_INTERVENTION_PARAMETERS
 } from './options.js'
 
 import {
   replayButton,
-  deathFilter,
-  stayHomeFilter
+  runNowButton,
+  glovesPct,
+  gownPct,
+  maskPct,
+  handwashPct,
+  n95Pct,
+  baselineR0,
+  testFrequency,
+  testPct
 } from './dom.js'
 
 import { Ball } from './Ball.js'
@@ -68,29 +76,62 @@ export const canvas = new window.p5(sketch => { // eslint-disable-line
       resetValues()
     })
 
+    runNowButton.onclick = () => {
+      startBalls()
+      resetValues()
+    }
+
     replayButton.onclick = () => {
       startBalls()
       resetValues()
     }
 
-    deathFilter.onclick = () => {
-      RUN.filters.death = !RUN.filters.death
-      document.getElementById('death-count').classList.toggle('show', RUN.filters.death)
-      startBalls()
-      resetValues()
+    baselineR0.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.baselineR0 = parseFloat(val.target.value)
     }
+    baselineR0.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.baselineR0.toString())
 
-    stayHomeFilter.onchange = () => {
-      RUN.filters.stayHome = !RUN.filters.stayHome
-      startBalls()
-      resetValues()
+    glovesPct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.glovesPct = parseInt(val.target.value)
     }
+    glovesPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.glovesPct.toString())
+
+    maskPct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.maskPct = parseInt(val.target.value)
+    }
+    maskPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.maskPct.toString())
+
+    gownPct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.gownPct = parseInt(val.target.value)
+    }
+    gownPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.gownPct.toString())
+
+    handwashPct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.handwashPct = parseInt(val.target.value)
+    }
+    handwashPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.handwashPct.toString())
+
+    n95Pct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.n95Pct = parseInt(val.target.value)
+    }
+    n95Pct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.n95Pct.toString())
+
+    testFrequency.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.testFrequency = parseInt(val.target.value)
+    }
+    testFrequency.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.testFrequency.toString())
+
+    testPct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.testPct = parseInt(val.target.value)
+    }
+    testPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.testPct.toString())
   }
 
   sketch.draw = () => {
     sketch.background('white')
     balls.forEach(ball => {
       ball.checkState()
+      ball.maybeTest()
       ball.checkCollisions({ others: balls })
       ball.move()
       ball.render()

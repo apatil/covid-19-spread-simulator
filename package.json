@@ -5,10 +5,10 @@
   "description": "Simulator about how Coronavirus spreads with free movement of people and confinement",
   "main": "",
   "scripts": {
-    "build": "npm run create:public && npm run minify:files && npm run copy:assets",
-    "create:public": "mkdir -p public",
-    "minify:files": "cd src && for f in ./*; do minify $f > ../public/$f; done;",
-    "copy:assets": "cp -r ./assets/ ./public/assets",
+    "build": "npm run create:docs && npm run minify:files && npm run copy:assets",
+    "create:docs": "mkdir -p docs",
+    "minify:files": "cd src && for f in ./*; do minify $f > ../docs/$f; done;",
+    "copy:assets": "cp -r ./assets/ ./docs/assets",
     "lint": "eslint src",
     "dev": "servor src index.html 1234 --browser --reload",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,7 +24,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
+      "pre-commit": "npm run lint && npm run-script build",
       "pre-push": "npm run lint"
     }
   },
