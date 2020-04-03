@@ -95,6 +95,14 @@ export const Canvas = new window.p5(sketch => {
       DEFAULT_INTERVENTION_PARAMETERS.baselineR0.toString()
     )
 
+    emergencyLockdown.onchange = () => {
+      DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown = emergencyLockdown.checked
+    }
+    emergencyLockdown.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown
+    )
+
     // glovesPct.onchange = val => {
     //   DEFAULT_INTERVENTION_PARAMETERS.glovesPct = parseInt(val.target.value)
     // }

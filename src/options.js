@@ -4,13 +4,13 @@ const DEFAULT_FILTERS = {
 }
 
 export const DEFAULT_INTERVENTION_PARAMETERS = {
-  baselineR0: 8,
-  handwashPct: 50,
-  glovesPct: 50,
-  maskPct: 50,
-  n95Pct: 50,
-  gownPct: 50,
-  testFrequency: 30,
+  baselineR0: 3.5,
+  handwashPct: 0,
+  glovesPct: 0,
+  maskPct: 0,
+  n95Pct: 0,
+  gownPct: 0,
+  testFrequency: 7,
   testPct: 0,
   emergencyLockdown: false,
   essentialPct: 15,
