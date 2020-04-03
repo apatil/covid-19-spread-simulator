@@ -4,12 +4,12 @@ const DEFAULT_FILTERS = {
 }
 
 export const DEFAULT_INTERVENTION_PARAMETERS = {
-  baselineR0: 3.5,
-  handwashPct: 0,
-  glovesPct: 0,
-  maskPct: 0,
-  n95Pct: 0,
-  gownPct: 0,
+  baselineR0: 8,
+  handwashPct: 50,
+  glovesPct: 50,
+  maskPct: 50,
+  n95Pct: 50,
+  gownPct: 50,
   testFrequency: 30,
   testPct: 0
 }
@@ -24,13 +24,14 @@ export const DESKTOP_CANVAS_SIZE = {
   width: 800
 }
 
-export const BALL_RADIUS = 5
+export const BALL_RADIUS = 6
+export const BADGE_RADIUS = 3
 export const COLORS = {
-  death: '#c50000',
-  recovered: '#D88DBC',
-  infected: '#5ABA4A',
-  well: '#63C8F2',
-  quarantined: '#FCBA03'
+  death: '#e41a1c',
+  recovered: '#4daf4a',
+  infected: '#e41a1c',
+  well: '#377eb8',
+  quarantined: '#ff7f00'
 }
 
 export const STATES = {
@@ -39,6 +40,16 @@ export const STATES = {
   recovered: 'recovered',
   quarantined: 'quarantined'
 }
+
+export const INTERVENTION_BADGES = ['handwash', 'gown', 'mask', 'n95', 'gloves']
+export const BADGE_COLORS = [
+  '#66c2a5',
+  '#fc8d62',
+  '#8da0cb',
+  '#e78ac3',
+  '#a6d854',
+  '#ffd92f'
+]
 
 export const COUNTERS = {
   ...STATES,
@@ -95,7 +106,7 @@ function getBaselineTransmissionProbability () {
   const nBalls = STARTING_BALLS.infected + STARTING_BALLS.well
 
   // units: px^2
-  const volume = (DESKTOP_CANVAS_SIZE.width * DESKTOP_CANVAS_SIZE.height)
+  const volume = DESKTOP_CANVAS_SIZE.width * DESKTOP_CANVAS_SIZE.height
 
   // units: balls / px ^ 2
   const ballDensity = nBalls / volume
@@ -121,21 +132,21 @@ function getBaselineTransmissionProbability () {
   //
   // unitless
   const baselineTransmissionProbability =
-    DEFAULT_INTERVENTION_PARAMETERS.baselineR0 /
-    nCollisionsWhileInfected
+    DEFAULT_INTERVENTION_PARAMETERS.baselineR0 / nCollisionsWhileInfected
   if (baselineTransmissionProbability > 1) {
-    throw Error('Need more balls to simulate such a high R0. Max R0 is ' + nCollisionsWhileInfected)
+    throw Error(
+      'Need more balls to simulate such a high R0. Max R0 is ' +
+        nCollisionsWhileInfected
+    )
   }
   return baselineTransmissionProbability
 }
 
-DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability =
-  getBaselineTransmissionProbability()
+DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability = getBaselineTransmissionProbability()
 
 export const resetRun = () => {
   RUN.results = { ...STARTING_BALLS }
   RUN.tick = 0
 
-  DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability =
-    getBaselineTransmissionProbability()
+  DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability = getBaselineTransmissionProbability()
 }

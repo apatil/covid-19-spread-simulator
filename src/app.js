@@ -23,25 +23,25 @@ import {
 } from './dom.js'
 
 import { Ball } from './Ball.js'
+import createSpriteSheet from './createSpriteSheet.js'
 
-import {
-  resetValues,
-  updateCount
-} from './results.js'
+import { resetValues, updateCount } from './results.js'
 
 let balls = []
 const matchMedia = window.matchMedia('(min-width: 800px)')
 
 let isDesktop = matchMedia.matches
 
-export const canvas = new window.p5(sketch => { // eslint-disable-line
-  const startBalls = () => {
+export const Canvas = new window.p5(sketch => {
+  // eslint-disable-line
+  const startBalls = sprite => {
     let id = 0
     balls = []
     Object.keys(STARTING_BALLS).forEach(state => {
       Array.from({ length: STARTING_BALLS[state] }, () => {
         const hasMovement = RUN.filters.stayHome
-          ? sketch.random(0, 100) < STATIC_PEOPLE_PERCENTATGE || state === STATES.infected
+          ? sketch.random(0, 100) < STATIC_PEOPLE_PERCENTATGE ||
+            state === STATES.infected
           : true
 
         balls[id] = new Ball({
@@ -58,15 +58,14 @@ export const canvas = new window.p5(sketch => { // eslint-disable-line
   }
 
   const createCanvas = () => {
-    const { height, width } = isDesktop
-      ? DESKTOP_CANVAS_SIZE
-      : CANVAS_SIZE
+    const { height, width } = isDesktop ? DESKTOP_CANVAS_SIZE : CANVAS_SIZE
 
     sketch.createCanvas(width, height)
   }
 
   sketch.setup = () => {
     createCanvas()
+    createSpriteSheet(sketch)
     startBalls()
 
     matchMedia.addListener(e => {
@@ -86,45 +85,69 @@ export const canvas = new window.p5(sketch => { // eslint-disable-line
       resetValues()
     }
 
-    baselineR0.onchange = (val) => {
+    baselineR0.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.baselineR0 = parseFloat(val.target.value)
     }
-    baselineR0.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.baselineR0.toString())
+    baselineR0.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.baselineR0.toString()
+    )
 
-    glovesPct.onchange = (val) => {
+    glovesPct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.glovesPct = parseInt(val.target.value)
     }
-    glovesPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.glovesPct.toString())
+    glovesPct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.glovesPct.toString()
+    )
 
-    maskPct.onchange = (val) => {
+    maskPct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.maskPct = parseInt(val.target.value)
     }
-    maskPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.maskPct.toString())
+    maskPct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.maskPct.toString()
+    )
 
-    gownPct.onchange = (val) => {
+    gownPct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.gownPct = parseInt(val.target.value)
     }
-    gownPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.gownPct.toString())
+    gownPct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.gownPct.toString()
+    )
 
-    handwashPct.onchange = (val) => {
+    handwashPct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.handwashPct = parseInt(val.target.value)
     }
-    handwashPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.handwashPct.toString())
+    handwashPct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.handwashPct.toString()
+    )
 
-    n95Pct.onchange = (val) => {
+    n95Pct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.n95Pct = parseInt(val.target.value)
     }
-    n95Pct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.n95Pct.toString())
+    n95Pct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.n95Pct.toString()
+    )
 
-    testFrequency.onchange = (val) => {
+    testFrequency.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.testFrequency = parseInt(val.target.value)
     }
-    testFrequency.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.testFrequency.toString())
+    testFrequency.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.testFrequency.toString()
+    )
 
-    testPct.onchange = (val) => {
+    testPct.onchange = val => {
       DEFAULT_INTERVENTION_PARAMETERS.testPct = parseInt(val.target.value)
     }
-    testPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.testPct.toString())
+    testPct.setAttribute(
+      'value',
+      DEFAULT_INTERVENTION_PARAMETERS.testPct.toString()
+    )
   }
 
   sketch.draw = () => {
