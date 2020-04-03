@@ -64,6 +64,7 @@ export class Ball {
     this.hasCollision = true
     this.survivor = false
     this.quarantined = false
+    this.essentialWorker = sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.essentialPct / 100
 
     this.interventions = {
       handwash: sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.handwashPct / 100,
@@ -137,9 +138,15 @@ export class Ball {
       const dx = x - this.x
       const dy = y - this.y
 
-      if (checkCollision({ dx, dy, diameter: BALL_RADIUS * 2 })) {
-        const { ax, ay } = calculateChangeDirection({ dx, dy })
+      let sociallyDistanced = false
+      let diameter = BALL_RADIUS * 2
+      if (this.sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct / 100) {
+        diameter = BALL_RADIUS * 3
+        sociallyDistanced = true
+      }
 
+      if (checkCollision({ dx, dy, diameter: diameter })) {
+        const { ax, ay } = calculateChangeDirection({ dx, dy, scale: (sociallyDistanced + 1) })
         this.vx -= ax
         this.vy -= ay
         otherBall.vx = ax
@@ -154,7 +161,8 @@ export class Ball {
         if (this.state === STATES.infected &&
             !this.quarantined &&
             otherBall.state === STATES.well &&
-            !isPrevented(otherBall)) {
+            !isPrevented(otherBall) &&
+            !sociallyDistanced) {
           otherBall.state = STATES.infected
           RUN.results[STATES.infected]++
           RUN.results[STATES.well]--
@@ -163,7 +171,8 @@ export class Ball {
         if (otherBall.state === STATES.infected &&
             !otherBall.quarantined &&
             this.state === STATES.well &&
-            !isPrevented(this)) {
+            !isPrevented(this) &&
+            !sociallyDistanced) {
           this.state = STATES.infected
           RUN.results[STATES.infected]++
           RUN.results[STATES.well]--
@@ -174,6 +183,7 @@ export class Ball {
 
   move () {
     if (!this.hasMovement) return
+    if (DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown && !this.essentialWorker) return
 
     this.x += this.vx
     this.y += this.vy

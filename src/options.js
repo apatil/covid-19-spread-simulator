@@ -1,5 +1,5 @@
 const DEFAULT_FILTERS = {
-  death: false,
+  death: true,
   stayHome: false
 }
 
@@ -11,7 +11,10 @@ export const DEFAULT_INTERVENTION_PARAMETERS = {
   n95Pct: 0,
   gownPct: 0,
   testFrequency: 30,
-  testPct: 0
+  testPct: 0,
+  emergencyLockdown: false,
+  essentialPct: 15,
+  socialDistancePct: 0
 }
 
 export const CANVAS_SIZE = {
@@ -37,7 +40,8 @@ export const STATES = {
   infected: 'infected',
   well: 'well',
   recovered: 'recovered',
-  quarantined: 'quarantined'
+  quarantined: 'quarantined',
+  death: 'death'
 }
 
 export const COUNTERS = {
@@ -72,7 +76,7 @@ export const STATIC_PEOPLE_PERCENTATGE = 25
 
 export const HANDWASHING_EFFECTIVENESS = 0.55
 export const MASK_EFFECTIVENESS = 0.68
-export const N95_MASK_EFFECTIVENESS = 0.95
+export const N95_MASK_EFFECTIVENESS = 0.91
 export const GLOVE_EFFECTIVENESS = 0.57
 export const GOWN_EFFECTIVENESS = 0.77
 export const HAND_MASK_GOWN_EFFECTIVENESS = 0.91

@@ -12,14 +12,16 @@ import {
 import {
   replayButton,
   runNowButton,
-  glovesPct,
-  gownPct,
+  // glovesPct,
+  // gownPct,
   maskPct,
   handwashPct,
   n95Pct,
   baselineR0,
   testFrequency,
-  testPct
+  testPct,
+  emergencyLockdown,
+  socialDistancePct
 } from './dom.js'
 
 import { Ball } from './Ball.js'
@@ -91,25 +93,35 @@ export const canvas = new window.p5(sketch => { // eslint-disable-line
     }
     baselineR0.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.baselineR0.toString())
 
-    glovesPct.onchange = (val) => {
-      DEFAULT_INTERVENTION_PARAMETERS.glovesPct = parseInt(val.target.value)
-    }
-    glovesPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.glovesPct.toString())
+    // glovesPct.onchange = (val) => {
+    //   DEFAULT_INTERVENTION_PARAMETERS.glovesPct = parseInt(val.target.value)
+    // }
+    // glovesPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.glovesPct.toString())
 
     maskPct.onchange = (val) => {
       DEFAULT_INTERVENTION_PARAMETERS.maskPct = parseInt(val.target.value)
     }
     maskPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.maskPct.toString())
 
-    gownPct.onchange = (val) => {
-      DEFAULT_INTERVENTION_PARAMETERS.gownPct = parseInt(val.target.value)
+    // gownPct.onchange = (val) => {
+    //   DEFAULT_INTERVENTION_PARAMETERS.gownPct = parseInt(val.target.value)
+    // }
+    // gownPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.gownPct.toString())
+
+    emergencyLockdown.onclick = () => {
+      DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown = emergencyLockdown.checked
     }
-    gownPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.gownPct.toString())
 
     handwashPct.onchange = (val) => {
       DEFAULT_INTERVENTION_PARAMETERS.handwashPct = parseInt(val.target.value)
     }
     handwashPct.setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.handwashPct.toString())
+
+    socialDistancePct.onchange = (val) => {
+      DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct = parseInt(val.target.value)
+    }
+    socialDistancePct
+      .setAttribute('value', DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct.toString())
 
     n95Pct.onchange = (val) => {
       DEFAULT_INTERVENTION_PARAMETERS.n95Pct = parseInt(val.target.value)
