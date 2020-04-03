@@ -1,5 +1,5 @@
 const DEFAULT_FILTERS = {
-  death: true,
+  death: false,
   stayHome: false
 }
 
