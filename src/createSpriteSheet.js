@@ -4,12 +4,16 @@ import {
   STATES,
   BADGE_RADIUS,
   INTERVENTION_BADGES,
-  BADGE_COLORS
+  BADGE_COLORS,
 } from './options.js'
 
-function getCombinations (array) {
+// add example state for dom
+let altered_states = Object.assign({}, STATES, { example: 'example' })
+let altered_colors = Object.assign({}, COLORS, { example: '#aaa' })
+
+function getCombinations(array) {
   var result = []
-  var f = function (prefix = [], array) {
+  var f = function(prefix = [], array) {
     for (var i = 0; i < array.length; i++) {
       result.push([...prefix, array[i]])
       f([...prefix, array[i]], array.slice(i + 1))
@@ -37,17 +41,17 @@ combos.unshift([])
 const createSpriteSheet = sketch => {
   const c = document.createElement('canvas')
   c.width = combos.length * spriteSize
-  c.height = Object.keys(STATES).length * spriteSize
+  c.height = Object.keys(altered_states).length * spriteSize
   const cx = c.getContext('2d')
 
   // this creates the lookup and draws on the spritesheet
   //
   const lookup = {}
   // different circle each row
-  for (let r = 0; r < Object.keys(STATES).length; r++) {
+  for (let r = 0; r < Object.keys(altered_states).length; r++) {
     // different intervention combo each column
     for (let c = 0; c < combos.length; c++) {
-      const state = Object.keys(STATES)[r]
+      const state = Object.keys(altered_states)[r]
       const combo = combos[c]
       const rad = BALL_RADIUS
       const y = r * spriteSize
@@ -55,7 +59,7 @@ const createSpriteSheet = sketch => {
       const offset = BALL_RADIUS + BADGE_RADIUS
 
       // base circle
-      cx.fillStyle = COLORS[state]
+      cx.fillStyle = altered_colors[state]
       cx.beginPath()
       cx.arc(x + offset, y + offset, rad, 0, Math.PI * 2)
       cx.fill()
@@ -78,6 +82,9 @@ const createSpriteSheet = sketch => {
       lookup[name] = [x, y, spriteSize, spriteSize]
     }
   }
+  // append for debug purposes
+  // document.body.appendChild(c)
+
   sketch.sprite = c
   sketch.sprite_lookup = lookup
 }

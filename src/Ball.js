@@ -13,11 +13,11 @@ import {
   HAND_MASK_GOWN_EFFECTIVENESS,
   DEFAULT_INTERVENTION_PARAMETERS,
   TICKS_PER_DAY,
-  INTERVENTION_BADGES
+  INTERVENTION_BADGES,
 } from './options.js'
 import { checkCollision, calculateChangeDirection } from './collisions.js'
 
-function isPrevented (ball) {
+function isPrevented(ball) {
   let probabilityOfInfection =
     DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability
 
@@ -50,7 +50,7 @@ function isPrevented (ball) {
 }
 
 export class Ball {
-  constructor ({ x, y, id, state, sketch, hasMovement }) {
+  constructor({ x, y, id, state, sketch, hasMovement }) {
     this.x = x
     this.y = y
     this.vx = (sketch.random(-1, 1) * SPEED) / Math.SQRT2
@@ -64,7 +64,8 @@ export class Ball {
     this.hasCollision = true
     this.survivor = false
     this.quarantined = false
-    this.essentialWorker = sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.essentialPct / 100
+    this.essentialWorker =
+      sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.essentialPct / 100
 
     this.interventions = {
       handwash:
@@ -73,11 +74,11 @@ export class Ball {
       mask: sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.maskPct / 100,
       n95: sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.n95Pct / 100,
       gloves:
-        sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.glovesPct / 100
+        sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.glovesPct / 100,
     }
   }
 
-  checkState () {
+  checkState() {
     if (this.state === STATES.infected) {
       if (
         RUN.filters.death &&
@@ -112,7 +113,7 @@ export class Ball {
     }
   }
 
-  test () {
+  test() {
     if (this.state === STATES.infected && !this.quarantined) {
       this.quarantined = true
       this.hasMovement = false
@@ -120,7 +121,7 @@ export class Ball {
     }
   }
 
-  maybeTest () {
+  maybeTest() {
     const itsTestDay =
       this.timeSinceTestDay >
       DEFAULT_INTERVENTION_PARAMETERS.testFrequency * TICKS_PER_DAY
@@ -137,7 +138,7 @@ export class Ball {
     }
   }
 
-  checkCollisions ({ others }) {
+  checkCollisions({ others }) {
     if (this.state === STATES.death) return
 
     for (let i = this.id + 1; i < others.length; i++) {
@@ -150,13 +151,20 @@ export class Ball {
 
       let sociallyDistanced = false
       let diameter = BALL_RADIUS * 2
-      if (this.sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct / 100) {
+      if (
+        this.sketch.random(0, 1) <
+        DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct / 100
+      ) {
         diameter = BALL_RADIUS * 3
         sociallyDistanced = true
       }
 
       if (checkCollision({ dx, dy, diameter: diameter })) {
-        const { ax, ay } = calculateChangeDirection({ dx, dy, scale: (sociallyDistanced + 1) })
+        const { ax, ay } = calculateChangeDirection({
+          dx,
+          dy,
+          scale: sociallyDistanced + 1,
+        })
         this.vx -= ax
         this.vy -= ay
         otherBall.vx = ax
@@ -170,21 +178,25 @@ export class Ball {
         }
         // then, if some is infected, then we make both infected
         // unless prevented by an intervention
-        if (this.state === STATES.infected &&
-            !this.quarantined &&
-            otherBall.state === STATES.well &&
-            !isPrevented(otherBall) &&
-            !sociallyDistanced) {
+        if (
+          this.state === STATES.infected &&
+          !this.quarantined &&
+          otherBall.state === STATES.well &&
+          !isPrevented(otherBall) &&
+          !sociallyDistanced
+        ) {
           otherBall.state = STATES.infected
           RUN.results[STATES.infected]++
           RUN.results[STATES.well]--
         }
 
-        if (otherBall.state === STATES.infected &&
-            !otherBall.quarantined &&
-            this.state === STATES.well &&
-            !isPrevented(this) &&
-            !sociallyDistanced) {
+        if (
+          otherBall.state === STATES.infected &&
+          !otherBall.quarantined &&
+          this.state === STATES.well &&
+          !isPrevented(this) &&
+          !sociallyDistanced
+        ) {
           this.state = STATES.infected
           RUN.results[STATES.infected]++
           RUN.results[STATES.well]--
@@ -193,9 +205,13 @@ export class Ball {
     }
   }
 
-  move () {
+  move() {
     if (!this.hasMovement) return
-    if (DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown && !this.essentialWorker) return
+    if (
+      DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown &&
+      !this.essentialWorker
+    )
+      return
 
     this.x += this.vx
     this.y += this.vy
@@ -217,7 +233,7 @@ export class Ball {
     }
   }
 
-  render () {
+  render() {
     // let color
     // if (this.quarantined) {
     //   color = COLORS.quarantined
@@ -227,6 +243,9 @@ export class Ball {
     // this.sketch.noStroke()
     // this.sketch.fill(color)
     let name = this.state
+    if (this.quarantined) {
+      name = 'quarantined'
+    }
     for (let i = 0; i < INTERVENTION_BADGES.length; i++) {
       const interventionCheck = INTERVENTION_BADGES[i]
       if (this.interventions[interventionCheck]) {
