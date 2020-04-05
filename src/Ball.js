@@ -13,11 +13,11 @@ import {
   HAND_MASK_GOWN_EFFECTIVENESS,
   DEFAULT_INTERVENTION_PARAMETERS,
   TICKS_PER_DAY,
-  INTERVENTION_BADGES,
+  INTERVENTION_BADGES
 } from './options.js'
 import { checkCollision, calculateChangeDirection } from './collisions.js'
 
-function isPrevented(ball) {
+function isPrevented (ball) {
   let probabilityOfInfection =
     DEFAULT_INTERVENTION_PARAMETERS.baselineTransmissionProbability
 
@@ -50,7 +50,7 @@ function isPrevented(ball) {
 }
 
 export class Ball {
-  constructor({ x, y, id, state, sketch, hasMovement }) {
+  constructor ({ x, y, id, state, sketch, hasMovement }) {
     this.x = x
     this.y = y
     this.vx = (sketch.random(-1, 1) * SPEED) / Math.SQRT2
@@ -74,11 +74,11 @@ export class Ball {
       mask: sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.maskPct / 100,
       n95: sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.n95Pct / 100,
       gloves:
-        sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.glovesPct / 100,
+        sketch.random(0, 1) < DEFAULT_INTERVENTION_PARAMETERS.glovesPct / 100
     }
   }
 
-  checkState() {
+  checkState () {
     if (this.state === STATES.infected) {
       if (
         RUN.filters.death &&
@@ -113,7 +113,7 @@ export class Ball {
     }
   }
 
-  test() {
+  test () {
     if (this.state === STATES.infected && !this.quarantined) {
       this.quarantined = true
       this.hasMovement = false
@@ -121,7 +121,7 @@ export class Ball {
     }
   }
 
-  maybeTest() {
+  maybeTest () {
     const itsTestDay =
       this.timeSinceTestDay >
       DEFAULT_INTERVENTION_PARAMETERS.testFrequency * TICKS_PER_DAY
@@ -138,7 +138,7 @@ export class Ball {
     }
   }
 
-  checkCollisions({ others }) {
+  checkCollisions ({ others }) {
     if (this.state === STATES.death) return
 
     for (let i = this.id + 1; i < others.length; i++) {
@@ -163,7 +163,7 @@ export class Ball {
         const { ax, ay } = calculateChangeDirection({
           dx,
           dy,
-          scale: sociallyDistanced + 1,
+          scale: sociallyDistanced + 1
         })
         this.vx -= ax
         this.vy -= ay
@@ -205,13 +205,12 @@ export class Ball {
     }
   }
 
-  move() {
+  move () {
     if (!this.hasMovement) return
     if (
       DEFAULT_INTERVENTION_PARAMETERS.emergencyLockdown &&
       !this.essentialWorker
-    )
-      return
+    ) { return }
 
     this.x += this.vx
     this.y += this.vy
@@ -233,7 +232,7 @@ export class Ball {
     }
   }
 
-  render() {
+  render () {
     // let color
     // if (this.quarantined) {
     //   color = COLORS.quarantined

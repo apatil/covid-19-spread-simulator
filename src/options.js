@@ -1,6 +1,6 @@
 const DEFAULT_FILTERS = {
   death: false,
-  stayHome: false,
+  stayHome: false
 }
 
 export const DEFAULT_INTERVENTION_PARAMETERS = {
@@ -14,17 +14,17 @@ export const DEFAULT_INTERVENTION_PARAMETERS = {
   testPct: 0,
   emergencyLockdown: false,
   essentialPct: 15,
-  socialDistancePct: 0,
+  socialDistancePct: 0
 }
 
 export const CANVAS_SIZE = {
   height: 880,
-  width: 360,
+  width: 360
 }
 
 export const DESKTOP_CANVAS_SIZE = {
   height: 400,
-  width: 800,
+  width: 800
 }
 
 export const BALL_RADIUS = 6
@@ -35,6 +35,7 @@ export const COLORS = {
   infected: '#e41a1c',
   well: '#377eb8',
   quarantined: '#ff7f00',
+  'max-concurrent-infected': '#e41a1c'
 }
 
 export const STATES = {
@@ -42,7 +43,7 @@ export const STATES = {
   well: 'well',
   recovered: 'recovered',
   quarantined: 'quarantined',
-  death: 'death',
+  death: 'death'
 }
 
 export const INTERVENTION_BADGES = [
@@ -50,7 +51,7 @@ export const INTERVENTION_BADGES = [
   'gloves',
   'mask',
   'n95',
-  'gowns',
+  'gowns'
 ]
 export const BADGE_COLORS = [
   '#66c2a5',
@@ -58,14 +59,14 @@ export const BADGE_COLORS = [
   '#8da0cb',
   '#e78ac3',
   '#a6d854',
-  '#ffd92f',
+  '#ffd92f'
 ]
 
 export const COUNTERS = {
   ...STATES,
   'max-concurrent-infected': 'max-concurrent-infected',
   'work-days-lost': 'work-days-lost',
-  'work-days-performed': 'work-days-performed',
+  'work-days-performed': 'work-days-performed'
 }
 
 export const STARTING_BALLS = {
@@ -74,14 +75,14 @@ export const STARTING_BALLS = {
   [STATES.recovered]: 0,
   [STATES.death]: 0,
   [STATES.quarantined]: 0,
-  'max-concurrent-infected': 0,
+  'max-concurrent-infected': 0
 }
 
 export const RUN = {
   filters: { ...DEFAULT_FILTERS },
   results: { ...STARTING_BALLS },
   interventionParameters: { ...DEFAULT_INTERVENTION_PARAMETERS },
-  tick: 0,
+  tick: 0
 }
 
 export const MORTALITY_PERCENTATGE = 5
@@ -98,7 +99,7 @@ export const GLOVE_EFFECTIVENESS = 0.57
 export const GOWN_EFFECTIVENESS = 0.77
 export const HAND_MASK_GOWN_EFFECTIVENESS = 0.91
 
-function getBaselineTransmissionProbability() {
+function getBaselineTransmissionProbability () {
   // In the original WaPo graphic, every collision resulted in a transmission.
   // As a result, R0 is really enormous and interventions need to be extremely
   // effective in order to reduce transmission.
