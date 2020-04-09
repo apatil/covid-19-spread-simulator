@@ -1,6 +1,6 @@
 import {
   BALL_RADIUS,
-  CANVAS_SIZE,
+  // CANVAS_SIZE,
   DESKTOP_CANVAS_SIZE,
   STARTING_BALLS,
   RUN,
@@ -60,7 +60,8 @@ export const Canvas = new window.p5(sketch => {
   }
 
   const createCanvas = () => {
-    const { height, width } = isDesktop ? DESKTOP_CANVAS_SIZE : CANVAS_SIZE
+    // const { height, width } = isDesktop ? DESKTOP_CANVAS_SIZE : CANVAS_SIZE
+    const {height, width} = DESKTOP_CANVAS_SIZE
 
     sketch.createCanvas(width, height)
   }

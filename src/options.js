@@ -17,10 +17,10 @@ export const DEFAULT_INTERVENTION_PARAMETERS = {
   socialDistancePct: 0
 }
 
-export const CANVAS_SIZE = {
-  height: 880,
-  width: 360
-}
+// export const CANVAS_SIZE = {
+//   height: 880,
+//   width: 360
+// }
 
 export const DESKTOP_CANVAS_SIZE = {
   height: 400,
@@ -101,36 +101,22 @@ export const HAND_MASK_GOWN_EFFECTIVENESS = 0.91
 
 function getBaselineTransmissionProbability () {
   // In the original WaPo graphic, every collision resulted in a transmission.
-  // As a result, R0 is really enormous and interventions need to be extremely
+  // As a result, R0 is on the high side and interventions need to be extremely
   // effective in order to reduce transmission.
   //
   // We want to calibrate the probability that a collision leads to transmission
   // so that the expected number of infections due to the first ball is equal to
-  // the R0 for covid-19, which is usually estimated as around 2.5.
+  // the R0 for covid-19, which has in the past been estimated at around 1.5-3.5
+  // but that recent estimates have pegged higher.
   //
   // Units of distance are px, velocity is px/s
 
-  // units: px
-  const diameter = 2 * BALL_RADIUS
-
-  // units: balls
-  const nBalls = STARTING_BALLS.infected + STARTING_BALLS.well
-
-  // units: px^2
-  const volume = DESKTOP_CANVAS_SIZE.width * DESKTOP_CANVAS_SIZE.height
-
-  // units: balls / px ^ 2
-  const ballDensity = nBalls / volume
-
-  // units: px / tick
-  const meanRelVelocity = Math.SQRT2 * SPEED
-
   // How frequently will balls collide?
-  // Note, this collision frequency estimate is different from the one in 3d
-  // because the ball sweeps out a volume of dvt, not pi d^2 vt.
+  // This was measured empirically to be safe, as opposed to estimated using
+  // methods from the kinetic theory of gases.
   //
   // units : balls / tick
-  const collisionFrequency = diameter * meanRelVelocity * ballDensity
+  const collisionFrequency = 0.01178
 
   // What is the total number of collisions that will occur during
   // an infection?
