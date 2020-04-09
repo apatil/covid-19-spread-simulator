@@ -155,7 +155,7 @@ export class Ball {
         this.sketch.random(0, 1) <
         DEFAULT_INTERVENTION_PARAMETERS.socialDistancePct / 100
       ) {
-        diameter = BALL_RADIUS * 3
+        diameter = BALL_RADIUS * 2.2
         sociallyDistanced = true
       }
 
